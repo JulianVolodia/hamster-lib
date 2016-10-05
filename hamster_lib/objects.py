@@ -43,7 +43,7 @@ class Category(object):
         Initialize this instance.
 
         Args:
-            name (str): This categories name.
+            name (str): This categories name. May contain whitespace!
             pk: The unique primary key used by the backend.
         """
 
@@ -130,7 +130,7 @@ class Activity(object):
         Initialize this instance.
 
         Args:
-            name (str): This activities name.
+            name (str): This activities name. May contain whitespace!
             pk: The unique primary key used by the backend.
             category (Category): ``Category`` instance associated with this ``Activity``.
             deleted (bool): True if this ``Activity`` has been marked as deleted.
@@ -254,7 +254,7 @@ class Tag(object):
         Initialize this instance.
 
         Args:
-            name (str): This tags name.
+            name (str): This tags name. May contain whitespace!
             pk: The unique primary key used by the backend.
         """
 
@@ -336,7 +336,7 @@ class Tag(object):
 class Fact(object):
     """Storage agnostic class for facts."""
     # [TODO]
-    # There is some weired black magic still to be integrated from
+    # There is some weird black magic still to be integrated from
     # ``store.db.Storage``. Among it ``__get_facts()``.
     #
 
