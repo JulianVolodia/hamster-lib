@@ -22,6 +22,7 @@ from __future__ import unicode_literals
 
 import datetime
 from collections import namedtuple
+from operator import attrgetter
 
 from future.utils import python_2_unicode_compatible
 from hamster_lib.helpers import time as time_helpers
@@ -604,6 +605,85 @@ class Fact(object):
     def category(self):
         """For convenience only."""
         return self.activity.category
+
+    def get_serialized_string(self, include_time=True):
+        """
+        Provide a canonical 'stringified' version of the fact.
+
+        This is different from ``__str__`` as we may change what information is
+        to be included in ``__str__`` anytime (and me may use localization
+        etc ..) but this property guaranties that all relevant values will be
+        encoded in the returned string in a canonical way. In that regard it
+        is in a way a counterpart to ``Fact.create_from_raw_fact``.
+        This also serves as a go-to reference implementation for 'what does a
+        complete ``raw fact`` looks like.
+
+        Please be advised though that the ``raw_string`` used to create a
+        ``Fact`` instance is not necessarily identical to this instances
+        ``serialized_string`` as the ``raw fact`` string may omit certain
+        values which will be autocompleted while this property always returns
+        a *complete* string..
+
+        A complete serialized fact looks like this:
+            ``2016-02-01 17:30 - 2016-02-01 18:10 making plans@world domination
+            #tag 1 #tag 2, description``
+
+            Please note the that we are very liberal with allowing whitespace
+            for ``Activity.name`` and ``Category.name``.
+
+        Attention:
+            ``Fact.tags`` is a set and hence unordered. In order to provide
+            a deterministic canonical return string we will sort tags by name
+            and list them alphabetically. This is purely cosmetic and does not
+            imply any actual ordering of those facts on the instance level.
+
+        Args:
+            include_time (bool): If to include start/end information or not.
+                Defaults to ``True``.
+
+        Returns:
+            text_type: Canonical string encoding all fact info available.
+        """
+        def get_times_string(fact):
+            result = ''
+            if fact.start and not fact.end:
+                result = '{} '.format(fact.start.strftime('%Y-%m-%d %H:%M'))
+            elif fact.start and fact.end:
+                result = '{start} - {end} '.format(
+                    start=fact.start.strftime('%Y-%m-%d %H:%M'),
+                    end=fact.end.strftime('%Y-%m-%d %H:%M')
+                )
+            else:
+                pass
+
+            return result
+
+        category = text_type()
+        if self.category:
+            category = '@{}'.format(self.category.name)
+
+        tags = text_type()
+        if self.tags:
+            ordered_tags = sorted(list(self.tags), key=attrgetter('name'))
+            tags = ' {}'.format(' '.join(['#{}'.format(tag.name) for tag in ordered_tags]))
+
+        description = text_type()
+        if self.description:
+            description = ', {}'.format(self.description)
+
+        times = text_type()
+        if include_time:
+            times = get_times_string(self)
+
+        result = '{times}{activity}{category}{tags}{description}'.format(
+            times=times,
+            activity=self.activity.name,
+            category=category,
+            tags=tags,
+            description=description
+        )
+
+        return text_type(result)
 
     def as_tuple(self, include_pk=True):
         """
