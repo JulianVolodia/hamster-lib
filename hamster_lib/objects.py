@@ -612,17 +612,17 @@ class Fact(object):
 
         This is different from ``__str__`` as we may change what information is
         to be included in ``__str__`` anytime (and me may use localization
-        etc ..) but this property guaranties that all relevant values will be
+        etc ..) but this property guarantees that all relevant values will be
         encoded in the returned string in a canonical way. In that regard it
         is in a way a counterpart to ``Fact.create_from_raw_fact``.
         This also serves as a go-to reference implementation for 'what does a
-        complete ``raw fact`` looks like.
+        complete ``raw fact`` looks like'.
 
         Please be advised though that the ``raw_string`` used to create a
         ``Fact`` instance is not necessarily identical to this instances
         ``serialized_string`` as the ``raw fact`` string may omit certain
         values which will be autocompleted while this property always returns
-        a *complete* string..
+        a *complete* string.
 
         A complete serialized fact looks like this:
             ``2016-02-01 17:30 - 2016-02-01 18:10 making plans@world domination
@@ -642,7 +642,7 @@ class Fact(object):
                 Defaults to ``True``.
 
         Returns:
-            text_type: Canonical string encoding all fact info available.
+            text_type: Canonical string encoding all available fact info.
         """
         def get_times_string(fact):
             result = ''
