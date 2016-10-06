@@ -44,7 +44,7 @@ class Category(object):
         Initialize this instance.
 
         Args:
-            name (str): This categories name. May contain whitespace!
+            name (str): This name of the category. May contain whitespace!
             pk: The unique primary key used by the backend.
         """
 
@@ -131,7 +131,7 @@ class Activity(object):
         Initialize this instance.
 
         Args:
-            name (str): This activities name. May contain whitespace!
+            name (str): This is the name of the category. May contain whitespace!
             pk: The unique primary key used by the backend.
             category (Category): ``Category`` instance associated with this ``Activity``.
             deleted (bool): True if this ``Activity`` has been marked as deleted.
@@ -255,7 +255,7 @@ class Tag(object):
         Initialize this instance.
 
         Args:
-            name (str): This tags name. May contain whitespace!
+            name (str): This name of the tag. May contain whitespace!
             pk: The unique primary key used by the backend.
         """
 
@@ -611,7 +611,7 @@ class Fact(object):
         Provide a canonical 'stringified' version of the fact.
 
         This is different from ``__str__`` as we may change what information is
-        to be included in ``__str__`` anytime (and me may use localization
+        to be included in ``__str__`` anytime (and we may use localization
         etc ..) but this property guarantees that all relevant values will be
         encoded in the returned string in a canonical way. In that regard it
         is in a way a counterpart to ``Fact.create_from_raw_fact``.
@@ -619,7 +619,7 @@ class Fact(object):
         complete ``raw fact`` looks like'.
 
         Please be advised though that the ``raw_string`` used to create a
-        ``Fact`` instance is not necessarily identical to this instances
+        ``Fact`` instance is not necessarily identical to this instance's
         ``serialized_string`` as the ``raw fact`` string may omit certain
         values which will be autocompleted while this property always returns
         a *complete* string.
@@ -628,7 +628,7 @@ class Fact(object):
             ``2016-02-01 17:30 - 2016-02-01 18:10 making plans@world domination
             #tag 1 #tag 2, description``
 
-            Please note the that we are very liberal with allowing whitespace
+            Please note that we are very liberal with allowing whitespace
             for ``Activity.name`` and ``Category.name``.
 
         Attention:
@@ -641,7 +641,6 @@ class Fact(object):
             text_type: Canonical string encoding all available fact info.
         """
         def get_times_string(fact):
-            result = ''
             if fact.start and not fact.end:
                 result = '{} '.format(fact.start.strftime('%Y-%m-%d %H:%M'))
             elif fact.start and fact.end:
@@ -650,20 +649,20 @@ class Fact(object):
                     end=fact.end.strftime('%Y-%m-%d %H:%M')
                 )
             else:
-                pass
+                result = ''
 
             return result
 
-        category = text_type()
+        category = ''
         if self.category:
             category = '@{}'.format(self.category.name)
 
-        tags = text_type()
+        tags = ''
         if self.tags:
             ordered_tags = sorted(list(self.tags), key=attrgetter('name'))
             tags = ' {}'.format(' '.join(['#{}'.format(tag.name) for tag in ordered_tags]))
 
-        description = text_type()
+        description = ''
         if self.description:
             description = ', {}'.format(self.description)
 
