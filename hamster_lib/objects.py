@@ -606,7 +606,7 @@ class Fact(object):
         """For convenience only."""
         return self.activity.category
 
-    def get_serialized_string(self, include_time=True):
+    def get_serialized_string(self):
         """
         Provide a canonical 'stringified' version of the fact.
 
@@ -636,10 +636,6 @@ class Fact(object):
             a deterministic canonical return string we will sort tags by name
             and list them alphabetically. This is purely cosmetic and does not
             imply any actual ordering of those facts on the instance level.
-
-        Args:
-            include_time (bool): If to include start/end information or not.
-                Defaults to ``True``.
 
         Returns:
             text_type: Canonical string encoding all available fact info.
@@ -671,9 +667,7 @@ class Fact(object):
         if self.description:
             description = ', {}'.format(self.description)
 
-        times = text_type()
-        if include_time:
-            times = get_times_string(self)
+        times = get_times_string(self)
 
         result = '{times}{activity}{category}{tags}{description}'.format(
             times=times,

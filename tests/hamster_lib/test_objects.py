@@ -395,16 +395,6 @@ class TestFact(object):
         assert isinstance(result, text_type)
         assert result == expectation
 
-    def test_serialized_string_exclude_timeinfo(self, fact):
-        """Make sure serialized string omits time info if we pass the parameter."""
-        expectation = '{activity}@{category} #{tag}, {description}'.format(
-            activity=fact.activity.name,
-            category=fact.category.name,
-            tag=sorted(list(fact.tags), key=attrgetter('name'))[0].name,
-            description=fact.description
-        )
-        assert fact.get_serialized_string(False) == expectation
-
     @pytest.mark.parametrize(('values', 'expectation'), (
         ({'start': datetime.datetime(2016, 1, 1, 18),
           'end': datetime.datetime(2016, 1, 1, 19),
