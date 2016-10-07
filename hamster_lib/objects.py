@@ -44,7 +44,7 @@ class Category(object):
         Initialize this instance.
 
         Args:
-            name (str): This name of the category. May contain whitespace!
+            name (str): The name of the category. May contain whitespace!
             pk: The unique primary key used by the backend.
         """
 
@@ -255,7 +255,7 @@ class Tag(object):
         Initialize this instance.
 
         Args:
-            name (str): This name of the tag. May contain whitespace!
+            name (str): The name of the tag. May contain whitespace!
             pk: The unique primary key used by the backend.
         """
 
